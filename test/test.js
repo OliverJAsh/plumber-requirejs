@@ -60,13 +60,16 @@ describe('requirejs', function(){
         var map = new SourceMapConsumer(resources[0].sourceMap());
         map.sources.should.deep.equal(['test/fixtures/app.js']);
         // identity mapping
-        for (var i = 1; i <= 5; i++) {
-          map.originalPositionFor({line: i, column: 0}).should.deep.equal({
-            source: 'test/fixtures/app.js',
-            line: i,
-            column: 0,
-            name: null
-          });
+        // Offset by 1 because RequireJS adds a new line at the start of the file
+        for (var i = 0; i <= 5; i++) {
+          if (i > 0) {
+            map.originalPositionFor({line: i, column: 0}).should.deep.equal({
+              source: 'test/fixtures/app.js',
+              line: i - 1,
+              column: 0,
+              name: null
+            });
+          }
         }
       });
     });
